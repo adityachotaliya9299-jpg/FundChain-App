@@ -236,18 +236,17 @@ export default function HomePage() {
         {/* Search + Filters */}
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 28 }}>
           {/* Search */}
-          <div style={{ position: "relative", flex: "1 1 260px", minWidth: 200 }}>
-            <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted)", fontSize: 16, pointerEvents: "none" }}>🔍</span>
+          <div style={{ position: "relative", width: "100%" }}>
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search campaigns..."
+              placeholder="🔍  Search campaigns..."
               style={{
                 width: "100%",
                 background: "var(--surface)",
                 border: "1px solid var(--border2)",
                 borderRadius: 12,
-                padding: "11px 16px 11px 42px",
+                padding: "11px 16px",
                 color: "var(--text)",
                 fontSize: 14,
                 fontFamily: "'DM Sans', sans-serif",
@@ -259,34 +258,34 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Filter tabs */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-            {[["all","All"],["active","Active"],["funded","Funded"],["ended","Ended"]].map(([val, label]) => (
-              <button key={val} onClick={() => setFilter(val)} style={filterBtnStyle(filter === val)}>{label}</button>
-            ))}
+          {/* Filters + Sort in one row */}
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+              {[["all","All"],["active","Active"],["funded","Funded"],["ended","Ended"]].map(([val, label]) => (
+                <button key={val} onClick={() => setFilter(val)} style={filterBtnStyle(filter === val)}>{label}</button>
+              ))}
+            </div>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              style={{
+                background: "var(--surface)",
+                border: "1px solid var(--border2)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                color: "var(--text2)",
+                fontSize: 13,
+                fontFamily: "'Syne', sans-serif",
+                fontWeight: 600,
+                outline: "none",
+                cursor: "pointer",
+              }}
+            >
+              <option value="newest">Newest First</option>
+              <option value="mostFunded">Most Funded</option>
+              <option value="endingSoon">Ending Soon</option>
+            </select>
           </div>
-
-          {/* Sort */}
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value)}
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border2)",
-              borderRadius: 12,
-              padding: "10px 14px",
-              color: "var(--text2)",
-              fontSize: 13,
-              fontFamily: "'Syne', sans-serif",
-              fontWeight: 600,
-              outline: "none",
-              cursor: "pointer",
-            }}
-          >
-            <option value="newest">Newest First</option>
-            <option value="mostFunded">Most Funded</option>
-            <option value="endingSoon">Ending Soon</option>
-          </select>
         </div>
 
         {/* Loading skeletons */}
