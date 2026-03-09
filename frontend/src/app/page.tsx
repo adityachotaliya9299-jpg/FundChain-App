@@ -226,15 +226,15 @@ export default function HomePage() {
       {/* Campaigns section */}
       <div id="campaigns" className="animate-fadeUp-3">
         {/* Section header */}
-        <div style={{ marginBottom: 28 }}>
-          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", marginBottom: 4 }}>
-            Active <span className="gradient-text">Campaigns</span>
-          </h2>
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>{filtered.length} campaign{filtered.length !== 1 ? "s" : ""} found</p>
-        </div>
+       <div style={{ marginBottom: 28, textAlign: "center" }}>
+  <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 28, letterSpacing: "-0.02em", marginBottom: 4 }}>
+    Active <span className="gradient-text">Campaigns</span>
+  </h2>
+  <p style={{ color: "var(--muted)", fontSize: 14 }}>{filtered.length} campaign{filtered.length !== 1 ? "s" : ""} found</p>
+</div>
 
         {/* Search + Filters */}
-        <div style={{ display: "flex", gap: 12, marginBottom: 28, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 28 }}>
           {/* Search */}
           <div style={{ position: "relative", flex: "1 1 260px", minWidth: 200 }}>
             <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--muted)", fontSize: 16, pointerEvents: "none" }}>🔍</span>
@@ -260,7 +260,7 @@ export default function HomePage() {
           </div>
 
           {/* Filter tabs */}
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
             {[["all","All"],["active","Active"],["funded","Funded"],["ended","Ended"]].map(([val, label]) => (
               <button key={val} onClick={() => setFilter(val)} style={filterBtnStyle(filter === val)}>{label}</button>
             ))}

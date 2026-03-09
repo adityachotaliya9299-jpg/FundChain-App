@@ -19,7 +19,7 @@ export default function RootLayout({
       <body>
         <ThirdwebProvider>
           <Navbar />
-          <main className="max-w-7xl mx-auto px-6 py-10">{children}</main>
+          <main className="max-w-7xl mx-auto px-8 py-10" style={{ paddingLeft: "clamp(16px, 5vw, 80px)", paddingRight: "clamp(16px, 5vw, 80px)" }}>{children}</main>
 
           <Footer />
         </ThirdwebProvider>
