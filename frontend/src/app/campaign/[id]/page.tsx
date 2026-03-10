@@ -14,6 +14,8 @@ import Milestones from "@/components/Milestones";
 import DAOVoting from "@/components/DAOVoting";
 import MultiTokenDonate from "@/components/MultiTokenDonate";
 import RefundClaim from "@/components/RefundClaim";
+import SocialShare from "@/components/SocialShare";
+import EmailSubscribe from "@/components/EmailSubscribe";
 
 function ShareButton({ title, url }: { title: string; url: string }) {
   const [copied, setCopied] = useState(false);
@@ -252,7 +254,13 @@ const { data: donorAmount } = useReadContract({
             }}
           >
             <img
-              src={campaign.image || `https://picsum.photos/seed/${id}/800/500`}
+              src={
+  campaign.image
+    ? campaign.image.startsWith("ipfs://")
+      ? campaign.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+      : campaign.image
+    : `https://placehold.co/800x500/1a1a2e/f97316?text=No+Image`
+}
               alt={campaign.title}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => {
@@ -356,10 +364,13 @@ const { data: donorAmount } = useReadContract({
                 </a>
               </div>
             </div>
-            <ShareButton
-              title={campaign.title}
-              url={typeof window !== "undefined" ? window.location.href : ""}
-            />
+            <SocialShare
+  title={campaign.title}
+  description={campaign.description}
+  raised={collected}
+  target={target}
+  campaignId={String(params.id)}
+/>
           </div>
 
           {/* Tabs */}
@@ -968,9 +979,19 @@ const { data: donorAmount } = useReadContract({
               isExpired={isExpired}
               isGoalReached={isGoalReached}
             />
+
+              {/* Email Subscribe */}
+            <EmailSubscribe
+              campaignId={id}
+              campaignTitle={campaign.title}
+              isOwner={isOwner}
+            />
           </div>
         </div>
+
+        
       </div>
+
     </div>
   );
 }

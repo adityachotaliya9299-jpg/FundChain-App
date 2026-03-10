@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { useReadContract } from "thirdweb/react";
 import { contract, contractV1 } from "@/app/contract";
 import Link from "next/link";
+import BackerLeaderboard from "@/components/BackerLeaderboard";
 
 function StatCard({ value, label, icon }: { value: string; label: string; icon: string }) {
   return (
@@ -39,7 +40,13 @@ function CampaignCard({ campaign, index }: { campaign: any; index: number }) {
         {/* Image */}
         <div style={{ position: "relative", height: 210, overflow: "hidden", flexShrink: 0 }}>
           <img
-            src={campaign.image || "https://placehold.co/600x400/1a1a2e/f97316?text=No+Image"}
+  src={
+    campaign.image
+      ? campaign.image.startsWith("ipfs://")
+        ? campaign.image.replace("ipfs://", "https://ipfs.io/ipfs/")
+        : campaign.image
+      : "https://placehold.co/600x400/1a1a2e/f97316?text=No+Image"
+  }
             alt={campaign.title}
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
@@ -367,6 +374,12 @@ const campaigns = useMemo(() => {
           </div>
         )}
       </div>
+
+
+      <div style={{ marginTop: 60 }}>
+        <BackerLeaderboard maxEntries={10} />
+      </div>
+
     </div>
   );
 }

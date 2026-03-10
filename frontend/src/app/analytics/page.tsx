@@ -1,4 +1,11 @@
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import DonationChart from "@/components/DonationChart";
+
 export default function AnalyticsPage() {
-  return <AnalyticsDashboard />;
+  return (
+    <div>
+      <AnalyticsDashboard />
+      <DonationChart />
+    </div>
+  );
 }
