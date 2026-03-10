@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSendTransaction, useActiveAccount } from "thirdweb/react";
 import { prepareContractCall, toWei } from "thirdweb";
 import { contract } from "@/app/contract";
+import IPFSUploader from "@/components/IPFSUploader";
 import { useRouter } from "next/navigation";
 
 const categories = ["Technology", "Education", "Environment", "Healthcare", "Arts", "Community", "Other"];
@@ -46,11 +47,19 @@ export default function CreateCampaignPage() {
     if (!account) return setError("Please connect your wallet first.");
     const deadlineTimestamp = BigInt(Math.floor(new Date(form.deadline).getTime() / 1000));
     const tx = prepareContractCall({
-      contract,
-      method: "function createCampaign(string _title, string _description, uint256 _target, uint256 _deadline, string _image) returns (uint256)",
-      params: [form.title, form.description, toWei(form.target), deadlineTimestamp,
-        form.image || `https://picsum.photos/seed/${Date.now()}/800/500`],
-    });
+  contract,
+  method: "function createCampaign(string,string,string,uint256,uint256,string,string[],uint256[]) returns (uint256)",
+  params: [
+    form.title,
+    form.description,
+    form.category,
+    toWei(form.target),
+    deadlineTimestamp,
+    form.image || `https://picsum.photos/seed/${Date.now()}/800/500`,
+    [],   // no milestones for now
+    [],   // no milestone targets for now
+  ],
+});
     sendTx(tx, {
       onSuccess: () => { setSuccess(true); setTimeout(() => router.push("/"), 3000); },
       onError: (err) => setError(err.message || "Transaction failed."),
@@ -199,15 +208,9 @@ export default function CreateCampaignPage() {
               )}
             </div>
 
-            <div>
-              <label style={labelStyle}>Campaign Image URL <span style={{ color: "var(--muted)", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
-              <input name="image" value={form.image} onChange={handleChange}
-                placeholder="https://example.com/your-image.jpg" style={inputStyle} />
-              {form.image && (
-                <img src={form.image} alt="preview" style={{ marginTop: 10, width: "100%", height: 160, objectFit: "cover", borderRadius: 12, border: "1px solid var(--border)" }}
-                  onError={e => ((e.target as HTMLImageElement).style.display = "none")} />
-              )}
-            </div>
+            <IPFSUploader
+  onUpload={(url) => setForm({ ...form, image: url })}
+/>
           </div>
         )}
 

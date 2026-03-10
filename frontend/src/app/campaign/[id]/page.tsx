@@ -5,6 +5,9 @@ import { prepareContractCall, toWei } from "thirdweb";
 import { contract } from "@/app/contract";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import CampaignUpdates from "@/components/CampaignUpdates";
+import Milestones from "@/components/Milestones";
+import RefundClaim from "@/components/RefundClaim";
 
 function ShareButton({ title, url }: { title: string; url: string }) {
   const [copied, setCopied] = useState(false);
@@ -177,6 +180,19 @@ export default function CampaignDetailPage() {
             </div>
           )}
 
+          {/* Milestones */}
+          <Milestones
+            campaignId={id}
+            amountCollected={collected}
+            isOwner={isOwner}
+          />
+
+          {/* Campaign Updates */}
+          <CampaignUpdates
+            campaignId={id}
+            isOwner={isOwner}
+          />
+
           {/* Backers tab */}
           {activeTab === "backers" && (
             <div className="animate-fadeIn" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "24px 28px" }}>
@@ -331,6 +347,14 @@ export default function CampaignDetailPage() {
                 💰 Withdraw Funds
               </button>
             )}
+
+            {/* Refund */}
+            <RefundClaim
+              campaignId={id}
+              isExpired={isExpired}
+              isGoalReached={isGoalReached}
+            />
+            
           </div>
         </div>
       </div>

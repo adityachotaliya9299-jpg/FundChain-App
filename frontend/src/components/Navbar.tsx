@@ -12,6 +12,7 @@ export default function Navbar() {
   const navLinks = [
     { label: "Campaigns", href: "/" },
     { label: "Start a Campaign", href: "/create" },
+     { label: "Analytics", href: "/analytics" },
   ];
 
   return (
