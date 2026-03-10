@@ -30,7 +30,7 @@ export default function IPFSUploader({ onUpload, label = "Campaign Image" }: IPF
       // Upload to IPFS via thirdweb storage
       const uri = await upload({ client, files: [file] });
       // Convert ipfs:// to https gateway URL
-      const gatewayUrl = uri.replace("ipfs://", "https://ipfs.io/ipfs/");
+      const gatewayUrl = uri.replace("ipfs://", "https://cloudflare-ipfs.com/ipfs/");
       onUpload(gatewayUrl);
       setUploading(false);
     } catch (err) {

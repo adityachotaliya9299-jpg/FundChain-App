@@ -39,12 +39,12 @@ function CampaignCard({ campaign, index }: { campaign: any; index: number }) {
         {/* Image */}
         <div style={{ position: "relative", height: 210, overflow: "hidden", flexShrink: 0 }}>
           <img
-            src={campaign.image || `https://picsum.photos/seed/${index + 10}/600/400`}
+            src={campaign.image || "https://placehold.co/600x400/1a1a2e/f97316?text=No+Image"}
             alt={campaign.title}
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s ease" }}
             onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
             onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
-            onError={e => { (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${index + 10}/600/400`; }}
+            onError={e => { (e.target as HTMLImageElement).src = "https://placehold.co/600x400/1a1a2e/f97316?text=No+Image"; }}
           />
           {/* Gradient overlay */}
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 80, background: "linear-gradient(to top, rgba(15,15,26,0.9), transparent)" }} />
@@ -135,18 +135,37 @@ export default function HomePage() {
   });
 
 const campaigns = useMemo(() => {
+
+    if (campaignsV2 && campaignsV2.length > 0) {
+      console.log("V2 raw:", campaignsV2[0]);
+    }
+    if (campaignsV1 && campaignsV1.length > 0) {
+      console.log("V1 raw:", campaignsV1[0]);
+    }
     const v1 = (campaignsV1 || []).map((c: any, i: number) => ({
-      owner: c[0], title: c[1], description: c[2],
+      owner: c.owner,
+      title: c.title,
+      description: c.description,
       category: "Legacy",
-      target: c[3], deadline: c[4], amountCollected: c[5],
-      image: c[6], donators: c[7] || [], donations: c[8] || [],
+      target: c.target,
+      deadline: c.deadline,
+      amountCollected: c.amountCollected,
+      image: c.image,
+      donators: c.donators || [],
+      donations: c.donations || [],
       _version: 1, _contractIndex: i,
     }));
     const v2 = (campaignsV2 || []).map((c: any, i: number) => ({
-      owner: c[0], title: c[1], description: c[2],
-      category: c[3] || "Other",
-      target: c[4], deadline: c[5], amountCollected: c[6],
-      image: c[7], donators: c[9] || [], donations: c[10] || [],
+      owner: c.owner,
+      title: c.title,
+      description: c.description,
+      category: c.category || "Other",
+      target: c.target,
+      deadline: c.deadline,
+      amountCollected: c.amountCollected,
+      image: c.image,
+      donators: c.donators || [],
+      donations: c.donations || [],
       _version: 2, _contractIndex: i,
     }));
     return [...v1, ...v2];
