@@ -24,7 +24,7 @@ function CampaignCard({ campaign, index }: { campaign: any; index: number }) {
   const isGoalReached = collected >= target;
 
   return (
-    <Link href={`/campaign/${campaign._version || 2}-${index}`} style={{ textDecoration: "none", color: "inherit" }}>
+    <Link href={`/campaign/${campaign._version || 2}-${campaign._contractIndex ?? index}`} style={{ textDecoration: "none", color: "inherit" }}>
       <div className="card-hover" style={{
         background: "var(--surface)",
         border: "1px solid var(--border)",
@@ -135,8 +135,8 @@ export default function HomePage() {
   });
 
   const campaigns = useMemo(() => {
-    const v1 = (campaignsV1 || []).map((c: any) => ({ ...c, category: "Legacy", _version: 1 }));
-    const v2 = (campaignsV2 || []).map((c: any) => ({ ...c, _version: 2 }));
+    const v1 = (campaignsV1 || []).map((c: any, i: number) => ({ ...c, category: "Legacy", _version: 1, _contractIndex: i }));
+    const v2 = (campaignsV2 || []).map((c: any, i: number) => ({ ...c, _version: 2, _contractIndex: i }));
     return [...v1, ...v2];
   }, [campaignsV1, campaignsV2]);
 
