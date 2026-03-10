@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useReadContract } from "thirdweb/react";
-import { contract } from "@/app/contract";
+import { contract, contractV1 } from "@/app/contract";
 import Link from "next/link";
 
 function StatCard({ value, label, icon }: { value: string; label: string; icon: string }) {
@@ -24,7 +24,7 @@ function CampaignCard({ campaign, index }: { campaign: any; index: number }) {
   const isGoalReached = collected >= target;
 
   return (
-    <Link href={`/campaign/${index}`} style={{ textDecoration: "none", color: "inherit" }}>
+    <Link href={`/campaign/${campaign._version || 2}-${index}`} style={{ textDecoration: "none", color: "inherit" }}>
       <div className="card-hover" style={{
         background: "var(--surface)",
         border: "1px solid var(--border)",
@@ -122,11 +122,25 @@ export default function HomePage() {
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  const { data: campaigns, isLoading } = useReadContract({
+ const { data: campaignsV2, isLoading: loadingV2 } = useReadContract({
     contract,
-    method: "function getCampaigns() returns ((address owner, string title, string description, uint256 target, uint256 deadline, uint256 amountCollected, string image, address[] donators, uint256[] donations, bool withdrawn)[])",
+    method: "function getCampaigns() returns ((address owner, string title, string description, string category, uint256 target, uint256 deadline, uint256 amountCollected, string image, bool withdrawn, address[] donators, uint256[] donations)[])",
     params: [],
   });
+
+  const { data: campaignsV1, isLoading: loadingV1 } = useReadContract({
+    contract: contractV1,
+    method: "function getCampaigns() returns ((address owner, string title, string description, uint256 target, uint256 deadline, uint256 amountCollected, string image, address[] donators, uint256[] donations)[])",
+    params: [],
+  });
+
+  const campaigns = useMemo(() => {
+    const v1 = (campaignsV1 || []).map((c: any) => ({ ...c, category: "Legacy", _version: 1 }));
+    const v2 = (campaignsV2 || []).map((c: any) => ({ ...c, _version: 2 }));
+    return [...v1, ...v2];
+  }, [campaignsV1, campaignsV2]);
+
+  const isLoading = loadingV1 || loadingV2;
 
   const stats = useMemo(() => {
     if (!campaigns) return { total: 0, totalRaised: "0", totalBackers: 0, active: 0 };
@@ -138,7 +152,7 @@ export default function HomePage() {
 
   const filtered = useMemo(() => {
     if (!campaigns) return [];
-    let result = [...campaigns];
+    let result = campaigns.map((c: any, i: number) => ({ ...c, _index: i }));
     if (search) result = result.filter((c: any) =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.description.toLowerCase().includes(search.toLowerCase())
@@ -316,8 +330,8 @@ export default function HomePage() {
         {/* Grid */}
         {!isLoading && filtered.length > 0 && (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24, maxWidth: 1140, margin: "0 auto" }}>
-            {filtered.map((campaign: any, index: number) => (
-              <CampaignCard key={index} campaign={campaign} index={index} />
+            {filtered.map((campaign: any) => (
+              <CampaignCard key={campaign._index} campaign={campaign} index={campaign._index} />
             ))}
           </div>
         )}

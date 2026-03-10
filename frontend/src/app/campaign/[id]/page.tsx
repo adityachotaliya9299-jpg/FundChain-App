@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useReadContract, useSendTransaction, useActiveAccount } from "thirdweb/react";
 import { prepareContractCall, toWei } from "thirdweb";
-import { contract } from "@/app/contract";
+import { contract, contractV1 } from "@/app/contract";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import CampaignUpdates from "@/components/CampaignUpdates";
@@ -28,7 +28,9 @@ function ShareButton({ title, url }: { title: string; url: string }) {
 export default function CampaignDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const id = Number(params.id);
+  const rawId = String(params.id);
+  const version = rawId.startsWith("1-") ? 1 : 2;
+  const id = Number(rawId.split("-")[1]);
   const account = useActiveAccount();
   const { mutate: sendTx, isPending } = useSendTransaction();
 
@@ -38,9 +40,12 @@ export default function CampaignDetailPage() {
   const [txError, setTxError] = useState("");
   const [activeTab, setActiveTab] = useState<"about"|"backers">("about");
 
+  const activeContract = version === 1 ? contractV1 : contract;
   const { data: campaigns, isLoading, refetch } = useReadContract({
-    contract,
-    method: "function getCampaigns() returns ((address owner, string title, string description, uint256 target, uint256 deadline, uint256 amountCollected, string image, address[] donators, uint256[] donations, bool withdrawn)[])",
+    contract: activeContract,
+    method: version === 1
+      ? "function getCampaigns() returns ((address owner, string title, string description, uint256 target, uint256 deadline, uint256 amountCollected, string image, address[] donators, uint256[] donations)[])"
+      : "function getCampaigns() returns ((address owner, string title, string description, string category, uint256 target, uint256 deadline, uint256 amountCollected, string image, bool withdrawn, address[] donators, uint256[] donations)[])",
     params: [],
   });
 
@@ -51,7 +56,7 @@ export default function CampaignDetailPage() {
     if (!donationAmount || Number(donationAmount) <= 0) return setTxError("Enter a valid amount.");
     setTxError("");
     const tx = prepareContractCall({
-      contract,
+      contract: activeContract,
       method: "function donateToCampaign(uint256 _id) payable",
       params: [BigInt(id)],
       value: toWei(donationAmount),
@@ -63,7 +68,7 @@ export default function CampaignDetailPage() {
   };
 
   const handleWithdraw = () => {
-    const tx = prepareContractCall({ contract, method: "function withdrawFunds(uint256 _id)", params: [BigInt(id)] });
+    const tx = prepareContractCall({ contract: activeContract, method: "function withdrawFunds(uint256 _id)", params: [BigInt(id)] });
     sendTx(tx, {
       onSuccess: () => { alert("✅ Funds withdrawn successfully!"); refetch(); },
       onError: err => setTxError(err.message),
@@ -94,7 +99,7 @@ export default function CampaignDetailPage() {
   const isExpired = deadline.getTime() < Date.now();
   const isOwner = account?.address?.toLowerCase() === campaign.owner?.toLowerCase();
   const isGoalReached = collected >= target;
-  const canWithdraw = isOwner && isGoalReached && !campaign.withdrawn && !isExpired;
+  const canWithdraw = isOwner && isGoalReached && !((campaign as any).withdrawn ?? false) && !isExpired;
 
   const quickAmounts = ["0.005", "0.01", "0.05", "0.1"];
 
@@ -354,7 +359,7 @@ export default function CampaignDetailPage() {
               isExpired={isExpired}
               isGoalReached={isGoalReached}
             />
-            
+
           </div>
         </div>
       </div>

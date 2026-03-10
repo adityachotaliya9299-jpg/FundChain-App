@@ -1,6 +1,6 @@
 "use client";
 import { useReadContract } from "thirdweb/react";
-import { contract } from "@/app/contract";
+import { contract, contractV1 } from "@/app/contract";
 import { useMemo } from "react";
 
 type Campaign = {
@@ -35,35 +35,77 @@ function StatBox({ icon, label, value, sub }: { icon: string; label: string; val
 }
 
 export default function AnalyticsDashboard() {
-  const { data: campaigns, isLoading } = useReadContract({
+  const { data: campaignsV2, isLoading: loadingV2 } = useReadContract({
     contract,
-    method: "function getCampaigns() returns ((address,string,string,string,uint256,uint256,uint256,string,bool,bool,address[],uint256[],uint256[])[])",
+    method: "function getCampaigns() returns ((address,string,string,string,uint256,uint256,uint256,string,bool,address[],uint256[])[])",
     params: [],
   });
 
-  const stats = useMemo(() => {
+  const { data: campaignsV1, isLoading: loadingV1 } = useReadContract({
+    contract: contractV1,
+    method: "function getCampaigns() returns ((address,string,string,uint256,uint256,uint256,string,address[],uint256[])[])",
+    params: [],
+  });
+
+  const campaigns = useMemo(() => {
+    const v1 = (campaignsV1 || []).map((c: any) => ({
+      owner: c[0],
+      title: c[1],
+      description: c[2],
+      category: "Legacy",
+      target: c[3],
+      deadline: c[4],
+      amountCollected: c[5],
+      image: c[6],
+      donators: c[7] || [],
+      donations: c[8] || [],
+    }));
+    const v2 = (campaignsV2 || []).map((c: any) => ({
+      owner: c[0],
+      title: c[1],
+      description: c[2],
+      category: c[3] || "Other",
+      target: c[4],
+      deadline: c[5],
+      amountCollected: c[6],
+      image: c[7],
+      donators: c[9] || [],
+      donations: c[10] || [],
+    }));
+    return [...v1, ...v2];
+  }, [campaignsV1, campaignsV2]);
+
+  const isLoading = loadingV1 || loadingV2;
+
+ const stats = useMemo(() => {
     if (!campaigns || campaigns.length === 0) return null;
 
-    const totalRaised = campaigns.reduce((acc: number, c: any) => acc + Number(c[6]) / 1e18, 0);
-    const totalBackers = campaigns.reduce((acc: number, c: any) => acc + c[10].length, 0);
-    const active = campaigns.filter((c: any) => Number(c[5]) * 1000 > Date.now()).length;
-    const funded = campaigns.filter((c: any) => Number(c[6]) >= Number(c[4])).length;
-    const avgGoal = campaigns.reduce((acc: number, c: any) => acc + Number(c[4]) / 1e18, 0) / campaigns.length;
+    // helper to safely get donators array
+  const getDonators = (c: any) => Array.isArray(c.donators) ? c.donators : [];
+    const getCollected = (c: any) => Number(c.amountCollected || 0);
+    const getTarget = (c: any) => Number(c.target || 0);
+    const getDeadline = (c: any) => Number(c.deadline || 0);
+    const getTitle = (c: any) => String(c.title || "");
+    const getCategory = (c: any) => String(c.category || "Other");
 
-    // Category breakdown
+    const totalRaised = campaigns.reduce((acc: number, c: any) => acc + getCollected(c) / 1e18, 0);
+    const totalBackers = campaigns.reduce((acc: number, c: any) => acc + getDonators(c).length, 0);
+    const active = campaigns.filter((c: any) => getDeadline(c) * 1000 > Date.now()).length;
+    const funded = campaigns.filter((c: any) => getCollected(c) >= getTarget(c)).length;
+    const avgGoal = campaigns.reduce((acc: number, c: any) => acc + getTarget(c) / 1e18, 0) / campaigns.length;
+
     const categoryMap: Record<string, number> = {};
     campaigns.forEach((c: any) => {
-      const cat = c[3] || "Other";
+      const cat = getCategory(c);
       categoryMap[cat] = (categoryMap[cat] || 0) + 1;
     });
 
-    // Top campaigns by raised
     const sorted = [...campaigns]
       .map((c: any, i: number) => ({
-        title: c[1],
-        raised: Number(c[6]) / 1e18,
-        target: Number(c[4]) / 1e18,
-        backers: c[10].length,
+        title: getTitle(c),
+        raised: getCollected(c) / 1e18,
+        target: getTarget(c) / 1e18,
+        backers: getDonators(c).length,
         index: i,
       }))
       .sort((a, b) => b.raised - a.raised)

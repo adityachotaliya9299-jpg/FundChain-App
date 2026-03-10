@@ -49,16 +49,16 @@ export default function CreateCampaignPage() {
     const tx = prepareContractCall({
   contract,
   method: "function createCampaign(string,string,string,uint256,uint256,string,string[],uint256[]) returns (uint256)",
-  params: [
-    form.title,
-    form.description,
-    form.category,
-    toWei(form.target),
-    deadlineTimestamp,
-    form.image || `https://picsum.photos/seed/${Date.now()}/800/500`,
-    [],   // no milestones for now
-    [],   // no milestone targets for now
-  ],
+params: [
+  form.title,
+  form.description,
+  form.category,
+  toWei(form.target),
+  deadlineTimestamp,
+  form.image || `https://picsum.photos/seed/${Date.now()}/800/500`,
+  [],
+  [],
+],
 });
     sendTx(tx, {
       onSuccess: () => { setSuccess(true); setTimeout(() => router.push("/"), 3000); },
