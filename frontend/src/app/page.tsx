@@ -134,9 +134,21 @@ export default function HomePage() {
     params: [],
   });
 
-  const campaigns = useMemo(() => {
-    const v1 = (campaignsV1 || []).map((c: any, i: number) => ({ ...c, category: "Legacy", _version: 1, _contractIndex: i }));
-    const v2 = (campaignsV2 || []).map((c: any, i: number) => ({ ...c, _version: 2, _contractIndex: i }));
+const campaigns = useMemo(() => {
+    const v1 = (campaignsV1 || []).map((c: any, i: number) => ({
+      owner: c[0], title: c[1], description: c[2],
+      category: "Legacy",
+      target: c[3], deadline: c[4], amountCollected: c[5],
+      image: c[6], donators: c[7] || [], donations: c[8] || [],
+      _version: 1, _contractIndex: i,
+    }));
+    const v2 = (campaignsV2 || []).map((c: any, i: number) => ({
+      owner: c[0], title: c[1], description: c[2],
+      category: c[3] || "Other",
+      target: c[4], deadline: c[5], amountCollected: c[6],
+      image: c[7], donators: c[9] || [], donations: c[10] || [],
+      _version: 2, _contractIndex: i,
+    }));
     return [...v1, ...v2];
   }, [campaignsV1, campaignsV2]);
 
@@ -157,9 +169,9 @@ export default function HomePage() {
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.description.toLowerCase().includes(search.toLowerCase())
     );
-    if (filter === "active") result = result.filter((c: any) => Number(c.deadline) * 1000 > Date.now());
+    if (filter === "active") result = result.filter((c: any) => Number(c.deadline) * 1000 > Date.now() && Number(c.amountCollected) < Number(c.target));
     if (filter === "funded") result = result.filter((c: any) => Number(c.amountCollected) >= Number(c.target));
-    if (filter === "ended") result = result.filter((c: any) => Number(c.deadline) * 1000 < Date.now());
+    if (filter === "ended") result = result.filter((c: any) => Number(c.deadline) * 1000 < Date.now() || Number(c.amountCollected) >= Number(c.target));
     if (sortBy === "newest") result = result.reverse();
     if (sortBy === "mostFunded") result = result.sort((a: any, b: any) => Number(b.amountCollected) - Number(a.amountCollected));
     if (sortBy === "endingSoon") result = result.sort((a: any, b: any) => Number(a.deadline) - Number(b.deadline));
