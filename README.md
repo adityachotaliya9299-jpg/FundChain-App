@@ -5,16 +5,21 @@
 [![Ethereum](https://img.shields.io/badge/Ethereum-Sepolia-3C3C3D?style=for-the-badge&logo=ethereum)](https://sepolia.etherscan.io)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.20-363636?style=for-the-badge&logo=solidity)](https://soliditylang.org)
 [![thirdweb](https://img.shields.io/badge/thirdweb-v5-7C3AED?style=for-the-badge)](https://thirdweb.com)
+[![IPFS](https://img.shields.io/badge/IPFS-Pinata-65C2CB?style=for-the-badge)](https://pinata.cloud)
 
-> **Fund ideas that matter, on-chain.** A fully decentralized crowdfunding platform built on Ethereum with DAO governance, multi-token support, NFT rewards, and milestone-based funding.
+> **Fund ideas that matter, on-chain.** A fully decentralized crowdfunding platform built on Ethereum with DAO governance, multi-token support, NFT rewards, milestone-based funding, and a complete analytics dashboard.
 
 ---
 
 ## 🌐 Live Demo
 
-**Website:** [fund-chain-app.vercel.app](https://fund-chain-app.vercel.app)  
-**V1 Contract:** [0xeA4eD8Bc...](https://sepolia.etherscan.io/address/0xeA4eD8Bc483b7bEdCFbFa7A83ecB151AC12f6996)  
-**V2 Contract:** [0xC7CF086e...](https://sepolia.etherscan.io/address/0xC7CF086e5ECa53BFda4D75e46753AA9ed794A131)
+**Website:** [fund-chain-app.vercel.app](https://fund-chain-app.vercel.app)
+
+| Contract | Address | Etherscan |
+|----------|---------|-----------|
+| FundChain V2 | `0xC7CF086e5ECa53BFda4D75e46753AA9ed794A131` | [View ↗](https://sepolia.etherscan.io/address/0xC7CF086e5ECa53BFda4D75e46753AA9ed794A131) |
+| FundChainDAO | `0xe5C6e9A21C1767Aa3DdC7163466C93089e354287` | [View ↗](https://sepolia.etherscan.io/address/0xe5C6e9A21C1767Aa3DdC7163466C93089e354287) |
+| FundChainMultiToken | `0x788d4204BAa22b4c336322F59c8E47d3a0d78C8d` | [View ↗](https://sepolia.etherscan.io/address/0x788d4204BAa22b4c336322F59c8E47d3a0d78C8d) |
 
 ---
 
@@ -22,7 +27,7 @@
 
 ### 🏦 Core Crowdfunding
 - **Create Campaigns** — Launch fundraisers with title, description, category, goal, and deadline
-- **IPFS Image Upload** — Decentralized image storage via thirdweb Storage
+- **IPFS Image Upload** — Decentralized image storage via Pinata
 - **Multi-Token Donations** — Accept ETH, USDC, and USDT
 - **Milestone-Based Funding** — Break goals into milestones; funds released per milestone
 - **Refund System** — Automatic refunds if goal not reached by deadline
@@ -36,22 +41,33 @@
 
 ### 🎖 NFT Rewards
 - **Bronze Badge** — Donate 0.01+ ETH
-- **Silver Badge** — Donate 0.05+ ETH  
+- **Silver Badge** — Donate 0.05+ ETH
 - **Gold Badge** — Donate 0.10+ ETH
 - **ERC-721 Standard** — Tradeable proof-of-contribution tokens
 
-### 📊 Analytics
-- **Platform Stats** — Total raised, backers, active campaigns, success rate
-- **Charts** — Donation timeline, category breakdown, top campaigns
-- **Backer Leaderboard** — Top donors ranked globally
-- **Real-time Data** — Pulled directly from Ethereum blockchain
+### 📊 Analytics Dashboard
+- **Real Transaction Data** — Pulled directly from Etherscan API
+- **Time Filters** — 1D / 5D / 30D / 1Y / ALL time periods
+- **ETH Raised Over Time** — Area chart with accurate on-chain timestamps
+- **Category Breakdown** — Bar chart of ETH raised per category
+- **Top Campaigns** — Progress bars for top 5 campaigns
+- **Summary Cards** — 24h / 30D / 1Y / Lifetime totals
 
-### 🔔 UX Features
-- **Social Sharing** — Share campaigns on Twitter/X, WhatsApp, Telegram, LinkedIn
-- **Email Notifications** — Get notified when goals are reached (via Resend)
+### 🎨 UX & Interface
+- **Dark / Light Mode** — Toggle with smooth transition, persists across sessions
+- **Countdown Timer** — Live ticking Days • Hours • Mins • Secs on campaign page
+- **Campaign Comments** — Comment, like, and delete with wallet identity
 - **Campaign Updates** — Owners post on-chain progress updates
+- **Social Sharing** — Share to Twitter/X, WhatsApp, Telegram, LinkedIn
+- **Email Notifications** — Get notified when goals are reached
+- **Backer Leaderboard** — Top donors ranked globally
+- **Search & Filter** — Filter by Active / Funded / Ended, sort by newest/oldest
 - **Mobile Responsive** — Works on all devices including MetaMask mobile browser
-- **Search & Filter** — Filter by Active, Funded, Ended; sort by newest/oldest
+
+### 📂 Browse & Profile
+- **Categories Page** — Browse campaigns by category with ETH stats per category
+- **User Profile Page** — View your created campaigns and all donations made
+- **Campaign Detail** — Full campaign page with tabs, milestones, DAO voting, and more
 
 ---
 
@@ -64,8 +80,9 @@
 | **Web3 SDK** | thirdweb v5 |
 | **Smart Contracts** | Solidity 0.8.20, OpenZeppelin |
 | **Development** | Foundry (Forge, Cast, Anvil) |
-| **Storage** | IPFS via thirdweb Storage |
+| **Storage** | IPFS via Pinata |
 | **Charts** | Recharts |
+| **Transaction Data** | Etherscan API |
 | **Email** | Resend API |
 | **Deployment** | Vercel (frontend), Ethereum Sepolia (contracts) |
 
@@ -75,43 +92,49 @@
 
 ```
 fundchain/
-├── frontend/                    # Next.js frontend
+├── frontend/                         # Next.js frontend
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── page.tsx         # Homepage — campaign listing
-│   │   │   ├── layout.tsx       # Root layout with Navbar + Footer
-│   │   │   ├── globals.css      # Global styles + CSS variables
-│   │   │   ├── client.ts        # thirdweb client
-│   │   │   ├── contract.ts      # Contract instances (V1 + V2)
-│   │   │   ├── create/          # Create campaign wizard
-│   │   │   ├── campaign/[id]/   # Campaign detail page
-│   │   │   ├── analytics/       # Analytics dashboard
-│   │   │   └── api/notify/      # Email notification API route
+│   │   │   ├── page.tsx              # Homepage — campaign listing
+│   │   │   ├── layout.tsx            # Root layout with Navbar + Footer
+│   │   │   ├── globals.css           # Global styles + CSS variables
+│   │   │   ├── client.ts             # thirdweb client
+│   │   │   ├── contract.ts           # Contract instances (V1 + V2)
+│   │   │   ├── create/               # Create campaign 3-step wizard
+│   │   │   ├── campaign/[id]/        # Campaign detail page
+│   │   │   ├── analytics/            # Analytics dashboard
+│   │   │   ├── categories/           # Browse by category
+│   │   │   ├── profile/              # User profile page
+│   │   │   └── api/notify/           # Email notification API route
 │   │   └── components/
-│   │       ├── Navbar.tsx
+│   │       ├── Navbar.tsx            # With mobile menu + theme toggle
 │   │       ├── Footer.tsx
-│   │       ├── IPFSUploader.tsx
+│   │       ├── ThemeContext.tsx       # Dark/Light mode state
+│   │       ├── ThemeToggle.tsx        # ☀️/🌙 toggle button
+│   │       ├── IPFSUploader.tsx       # Pinata IPFS upload
+│   │       ├── CountdownTimer.tsx     # Live deadline countdown
+│   │       ├── CampaignComments.tsx   # Comments with likes
 │   │       ├── CampaignUpdates.tsx
 │   │       ├── Milestones.tsx
 │   │       ├── RefundClaim.tsx
 │   │       ├── DAOVoting.tsx
 │   │       ├── MultiTokenDonate.tsx
 │   │       ├── BackerLeaderboard.tsx
-│   │       ├── DonationChart.tsx
+│   │       ├── DonationChart.tsx      # All 3 charts combined
 │   │       ├── SocialShare.tsx
 │   │       └── EmailSubscribe.tsx
 │   └── .env.local
 │
-└── crowdfund-platform-foundry/  # Solidity smart contracts
+└── crowdfund-platform-foundry/       # Solidity smart contracts
     ├── src/
-    │   ├── CrowdfundPlatform.sol  # V1 Contract
-    │   ├── FundChain.sol          # V2 Main Contract
-    │   ├── FundChainNFT.sol       # ERC-721 NFT Rewards
-    │   ├── FundChainDAO.sol       # DAO Governance
-    │   └── FundChainMultiToken.sol # Multi-token donations
+    │   ├── CrowdfundPlatform.sol      # V1 Contract (legacy)
+    │   ├── FundChain.sol              # V2 Main Contract
+    │   ├── FundChainNFT.sol           # ERC-721 NFT Rewards
+    │   ├── FundChainDAO.sol           # DAO Governance
+    │   └── FundChainMultiToken.sol    # Multi-token donations
     └── script/
-        ├── Deploy.s.sol           # V2 deploy script
-        └── DeployV3.s.sol         # V3 deploy script
+        ├── Deploy.s.sol               # V2 deploy script
+        └── DeployV3.s.sol             # V3 deploy script
 ```
 
 ---
@@ -142,9 +165,11 @@ Edit `.env.local`:
 ```env
 NEXT_PUBLIC_THIRDWEB_CLIENT_ID=your_thirdweb_client_id
 NEXT_PUBLIC_CONTRACT_ADDRESS=0xC7CF086e5ECa53BFda4D75e46753AA9ed794A131
-NEXT_PUBLIC_DAO_ADDRESS=your_dao_contract_address
-NEXT_PUBLIC_MULTITOKEN_ADDRESS=your_multitoken_contract_address
-RESEND_API_KEY=your_resend_api_key (optional)
+NEXT_PUBLIC_DAO_ADDRESS=0xe5C6e9A21C1767Aa3DdC7163466C93089e354287
+NEXT_PUBLIC_MULTITOKEN_ADDRESS=0x788d4204BAa22b4c336322F59c8E47d3a0d78C8d
+NEXT_PUBLIC_PINATA_JWT=your_pinata_jwt
+RESEND_API_KEY=your_resend_api_key
+NEXT_PUBLIC_APP_URL=https://fund-chain-app.vercel.app
 ```
 
 ```bash
@@ -179,12 +204,17 @@ forge build
 # Run tests
 forge test
 
-# Deploy to Sepolia
+# Deploy V2 to Sepolia
 forge script script/Deploy.s.sol \
   --rpc-url $SEPOLIA_RPC_URL \
   --private-key $PRIVATE_KEY \
-  --broadcast \
-  --verify
+  --broadcast --verify
+
+# Deploy V3 to Sepolia
+forge script script/DeployV3.s.sol \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --private-key $PRIVATE_KEY \
+  --broadcast --verify
 ```
 
 ---
@@ -192,12 +222,6 @@ forge script script/Deploy.s.sol \
 ## 📜 Smart Contracts
 
 ### FundChain.sol (V2 Main)
-```
-Address: 0xC7CF086e5ECa53BFda4D75e46753AA9ed794A131
-Network: Ethereum Sepolia
-```
-
-Key functions:
 | Function | Description |
 |----------|-------------|
 | `createCampaign()` | Launch a new campaign with milestones |
@@ -209,9 +233,6 @@ Key functions:
 | `getCampaigns()` | Returns all campaigns |
 
 ### FundChainNFT.sol
-```
-Deployed with V2 — linked automatically
-```
 | Tier | Min Donation | Token |
 |------|-------------|-------|
 | Bronze | 0.01 ETH | ERC-721 |
@@ -241,7 +262,7 @@ Deployed with V2 — linked automatically
 ```
 1. Connect MetaMask wallet
         ↓
-2. Browse campaigns or Create new one
+2. Browse campaigns by category or search
         ↓
 3. Donate ETH/USDC/USDT → Earn NFT badge
         ↓
@@ -261,8 +282,9 @@ Deployed with V2 — linked automatically
 |----------|----------|-------------|
 | `NEXT_PUBLIC_THIRDWEB_CLIENT_ID` | ✅ | thirdweb API client ID |
 | `NEXT_PUBLIC_CONTRACT_ADDRESS` | ✅ | V2 FundChain contract address |
-| `NEXT_PUBLIC_DAO_ADDRESS` | ⚡ | DAO contract address |
-| `NEXT_PUBLIC_MULTITOKEN_ADDRESS` | ⚡ | MultiToken contract address |
+| `NEXT_PUBLIC_DAO_ADDRESS` | ✅ | DAO contract address |
+| `NEXT_PUBLIC_MULTITOKEN_ADDRESS` | ✅ | MultiToken contract address |
+| `NEXT_PUBLIC_PINATA_JWT` | ✅ | Pinata JWT for IPFS uploads |
 | `RESEND_API_KEY` | 🔔 | Email notifications (optional) |
 | `NEXT_PUBLIC_APP_URL` | 🔔 | Your production URL (optional) |
 
@@ -276,16 +298,20 @@ Deployed with V2 — linked automatically
 3. Get test USDT: [Aave Faucet](https://staging.aave.com/faucet)
 
 ### Full Test Checklist
-- [ ] Create a campaign with IPFS image
+- [ ] Create a campaign with IPFS image (Pinata)
+- [ ] Browse campaigns by category
 - [ ] Donate ETH to a campaign
 - [ ] Check NFT badge minted (Bronze/Silver/Gold)
 - [ ] Post a campaign update
-- [ ] Create a DAO proposal
-- [ ] Vote on a proposal
+- [ ] Create a DAO proposal and vote
+- [ ] Test countdown timer on campaign page
+- [ ] Post and like a comment
+- [ ] Test dark/light mode toggle
+- [ ] View profile page (my campaigns + donations)
 - [ ] Test refund (expired + goal not met)
 - [ ] Withdraw funds (goal reached)
+- [ ] Check analytics — time filters (1D/5D/30D/1Y/ALL)
 - [ ] Share campaign on social media
-- [ ] Check analytics dashboard
 - [ ] Test on mobile (MetaMask browser)
 
 ---
@@ -296,7 +322,7 @@ Deployed with V2 — linked automatically
 1. Push to GitHub
 2. Import project on [vercel.com](https://vercel.com)
 3. Set Root Directory to `frontend`
-4. Add environment variables
+4. Add all environment variables
 5. Deploy!
 
 ### Contract Verification
@@ -314,7 +340,6 @@ forge verify-contract \
 
 - [ ] Deploy to Ethereum Mainnet
 - [ ] Add more ERC-20 token support
-- [ ] Campaign categories marketplace
 - [ ] Gasless transactions (EIP-2771)
 - [ ] Mobile app (React Native)
 - [ ] IPFS-hosted frontend (full decentralization)
@@ -324,8 +349,8 @@ forge verify-contract \
 
 ## 👨‍💻 Author
 
-**Aditya Chotaliya**  
-[GitHub](https://github.com/adityachotaliya9299-jpg) · [Etherscan](https://sepolia.etherscan.io/address/0x72F668Aca488E6d5Aa847f3636aEb0B95413DEF7)
+**Aditya Chotaliya**
+[GitHub](https://github.com/adityachotaliya9299-jpg/FundChain) · [Etherscan](https://sepolia.etherscan.io/address/0x72F668Aca488E6d5Aa847f3636aEb0B95413DEF7)
 
 ---
 
@@ -340,8 +365,10 @@ MIT License — see [LICENSE](LICENSE) for details.
 - [thirdweb](https://thirdweb.com) — Web3 development framework
 - [OpenZeppelin](https://openzeppelin.com) — Smart contract standards
 - [Foundry](https://getfoundry.sh) — Ethereum development toolkit
+- [Pinata](https://pinata.cloud) — IPFS storage
 - [Recharts](https://recharts.org) — Chart library
 - [Resend](https://resend.com) — Email API
+- [Etherscan](https://etherscan.io) — Blockchain explorer & API
 
 ---
 
