@@ -342,7 +342,7 @@ const campaigns = useMemo(() => {
 
         {/* Loading skeletons */}
         {isLoading && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: 24 }}>
             {[1,2,3].map(i => <SkeletonCard key={i} />)}
           </div>
         )}
@@ -367,7 +367,7 @@ const campaigns = useMemo(() => {
 
         {/* Grid */}
         {!isLoading && filtered.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24, maxWidth: 1140, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(320px, 100%), 1fr))", gap: 24, maxWidth: 1140, margin: "0 auto" }}>
             {filtered.map((campaign: any) => (
               <CampaignCard key={campaign._index} campaign={campaign} index={campaign._index} />
             ))}

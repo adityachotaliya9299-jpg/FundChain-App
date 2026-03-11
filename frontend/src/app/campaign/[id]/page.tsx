@@ -233,14 +233,14 @@ const { data: donorAmount } = useReadContract({
         </span>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 380px",
-          gap: 36,
-          alignItems: "start",
-        }}
-      >
+      <div style={{
+  display: "grid",
+  gridTemplateColumns: "1fr 380px",
+  gap: 36,
+  alignItems: "start",
+}} className="campaign-detail-grid">
+
+
         {/* LEFT */}
         <div>
           {/* Hero image */}
@@ -797,7 +797,7 @@ const { data: donorAmount } = useReadContract({
                     ✏️ Custom Amount
                   </button>
                   {customAmount && (
-                    <div style={{ position: "relative" }}>
+                    <div style={{ position: "sticky", top: 88 }}>
                       <input
                         type="number"
                         value={donationAmount}

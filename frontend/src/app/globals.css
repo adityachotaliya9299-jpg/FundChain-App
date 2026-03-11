@@ -237,3 +237,319 @@ input:focus, textarea:focus, select:focus {
   .mobile-center { text-align: center !important; }
   .mobile-grid-1 { grid-template-columns: 1fr !important; }
 }
+
+
+/* ============================================
+   FUNDCHAIN — MOBILE RESPONSIVE CSS
+   ============================================ */
+
+/* ── Tablet (max 1024px) ── */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 24px !important;
+  }
+
+  /* Campaign detail — stack columns */
+  [style*="gridTemplateColumns: 1fr 380px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sticky panel becomes normal */
+  [style*="position: sticky"] {
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+/* ── Mobile (max 768px) ── */
+@media (max-width: 768px) {
+  /* ── NAVBAR ── */
+  .navbar-links {
+    display: none !important;
+  }
+
+  .navbar-mobile-menu {
+    display: flex !important;
+  }
+
+  .navbar-container {
+    padding: 0 16px !important;
+  }
+
+  /* ── HOMEPAGE HERO ── */
+  .hero-title {
+    font-size: clamp(28px, 8vw, 48px) !important;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* ── CAMPAIGN GRID ── */
+  [style*="repeat(auto-fill"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Filter buttons */
+  [style*="display: flex"][style*="gap: 8px"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* ── CAMPAIGN DETAIL ── */
+  [style*="gridTemplateColumns: 1fr 380px"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  [style*="position: sticky"][style*="top: 88"] {
+    position: relative !important;
+    top: 0 !important;
+  }
+
+  /* Hero image */
+  [style*="height: 380px"] {
+    height: 220px !important;
+  }
+
+  /* Title row */
+  [style*="justifyContent: space-between"][style*="alignItems: flex-start"] {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* Quick donate grid */
+  [style*="gridTemplateColumns: repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Stats grid */
+  [style*="gridTemplateColumns: 1fr 1fr 1fr"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* ── CREATE CAMPAIGN ── */
+  [style*="maxWidth: 700"] {
+    padding: 0 16px !important;
+  }
+
+  /* Step indicator */
+  [style*="borderRadius: 16"][style*="padding: 6"] {
+    flex-direction: column !important;
+    gap: 4px !important;
+  }
+
+  /* Form card */
+  [style*="padding: \"32px 36px\""] {
+    padding: 20px 16px !important;
+  }
+
+  /* Quick select amounts */
+  [style*="gridTemplateColumns: repeat(4, 1fr)"][style*="gap: 8"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── ANALYTICS ── */
+  [style*="gridTemplateColumns"][style*="1fr 1fr 1fr"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── DAO VOTING ── */
+  [style*="gridTemplateColumns: \"1fr 1fr\""] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── MULTI TOKEN ── */
+  [style*="gridTemplateColumns: repeat(3,1fr)"] {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
+  }
+
+  /* ── FOOTER ── */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  /* ── GENERAL ── */
+  .animate-fadeUp, .animate-fadeIn {
+    padding-bottom: 40px !important;
+  }
+}
+
+/* ── Small Mobile (max 480px) ── */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px !important;
+  }
+
+  /* Navbar wallet button - compact */
+  [style*="Connect Wallet"] {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Campaign card */
+  [style*="borderRadius: 20"][style*="overflow: hidden"] {
+    border-radius: 14px !important;
+  }
+
+  /* Donate panel */
+  [style*="borderRadius: 24"][style*="padding: \"28px 24px\""] {
+    border-radius: 16px !important;
+    padding: 20px 16px !important;
+  }
+
+  /* Form inputs */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+  }
+
+  /* Charts */
+  .recharts-wrapper {
+    font-size: 10px !important;
+  }
+}
+
+/* ============================================
+   MOBILE NAVBAR — MOBILE RESPONSIVE CSS
+   ============================================ */
+
+.navbar-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.navbar-mobile-menu span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.mobile-nav-open .navbar-mobile-menu span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-nav-open .navbar-mobile-menu span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-nav-open .navbar-mobile-menu span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile nav dropdown */
+.mobile-nav-dropdown {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px;
+  z-index: 999;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.mobile-nav-dropdown.open {
+  display: flex;
+}
+
+.mobile-nav-dropdown a {
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: var(--text2);
+  text-decoration: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.mobile-nav-dropdown a:hover {
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+
+/* ============================================
+   TOUCH IMPROVEMENTS
+   ============================================ */
+
+@media (hover: none) {
+  /* Bigger touch targets */
+  button {
+    min-height: 44px;
+  }
+
+  input, select, textarea {
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch */
+  [onMouseEnter], [onMouseLeave] {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .campaign-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+/* ============================================
+   SAFE AREA (iPhone notch support)
+   ============================================ */
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  .navbar-container {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+
+
+/* Fix navbar overlap */
+main {
+  padding-top: 88px !important;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding-top: 80px !important;
+  }
+  .container {
+    padding: 0 16px;
+  }
+}
