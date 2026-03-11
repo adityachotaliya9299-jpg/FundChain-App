@@ -16,6 +16,8 @@ import MultiTokenDonate from "@/components/MultiTokenDonate";
 import RefundClaim from "@/components/RefundClaim";
 import SocialShare from "@/components/SocialShare";
 import EmailSubscribe from "@/components/EmailSubscribe";
+import CountdownTimer from "@/components/CountdownTimer";
+import CampaignComments from "@/components/CampaignComments";
 
 function ShareButton({ title, url }: { title: string; url: string }) {
   const [copied, setCopied] = useState(false);
@@ -491,6 +493,11 @@ const { data: donorAmount } = useReadContract({
             donorAmount={Number(donorAmount || 0)}
           />
 
+
+           {/* Comments */}
+          <CampaignComments campaignId={id} />
+
+
           {/* Backers tab */}
           {activeTab === "backers" && (
             <div
@@ -718,6 +725,15 @@ const { data: donorAmount } = useReadContract({
                 </div>
               ))}
             </div>
+
+
+            {/* Countdown timer */}
+            {!isExpired && (
+              <div style={{ marginBottom: 20 }}>
+                <CountdownTimer deadline={Number(campaign.deadline)} />
+              </div>
+            )}
+
 
             {/* Donate section */}
             {!isExpired && !txSuccess && (

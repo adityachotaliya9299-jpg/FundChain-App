@@ -553,3 +553,59 @@ main {
     padding: 0 16px;
   }
 }
+
+
+
+/* ============================================
+   LIGHT MODE THEME
+   ============================================ */
+
+[data-theme="light"] {
+  --bg:       #f8f7f4;
+  --surface:  #ffffff;
+  --surface2: #f1f0ed;
+  --border:   rgba(0, 0, 0, 0.08);
+  --border2:  rgba(0, 0, 0, 0.12);
+  --text:     #0f0f1a;
+  --text2:    #4a4a6a;
+  --muted:    #8888aa;
+  --accent:   #ea580c;
+  --accent-glow: rgba(234, 88, 12, 0.08);
+  --green:    #16a34a;
+  --red:      #dc2626;
+  --surface3: #e8e7e4;
+}
+
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+[data-theme="light"] nav {
+  background: rgba(248, 247, 244, 0.92) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[data-theme="light"] .gradient-text {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: var(--surface2) !important;
+  color: var(--text) !important;
+  border-color: var(--border2) !important;
+}
+
+[data-theme="light"] .progress-bar {
+  background: linear-gradient(90deg, #ea580c, #f97316) !important;
+}
+
+/* Smooth transition */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
+}
