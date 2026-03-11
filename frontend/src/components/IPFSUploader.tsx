@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { upload } from "thirdweb/storage";
-import { client } from "@/app/client";
 
 interface IPFSUploaderProps {
   onUpload: (url: string) => void;
@@ -26,12 +24,20 @@ export default function IPFSUploader({ onUpload, label = "Campaign Image" }: IPF
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
 
-    try {
-      // Upload to IPFS via thirdweb storage
-      const uri = await upload({ client, files: [file] });
-      // Convert ipfs:// to https gateway URL
-      const gatewayUrl = uri.replace("ipfs://", "https://ipfs.io/ipfs/");
-      onUpload(gatewayUrl);
+   try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+        },
+        body: formData,
+      });
+      const data = await res.json();
+      if (!data.IpfsHash) throw new Error("Upload failed");
+      const ipfsUrl = `ipfs://${data.IpfsHash}`;
+      onUpload(ipfsUrl);
       setUploading(false);
     } catch (err) {
       console.error(err);
